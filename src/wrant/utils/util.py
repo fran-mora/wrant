@@ -5,7 +5,7 @@ import csv
 import time
 import urllib
 import operator
-#
+import os
 
 def get(url, sent=None, headers=None, json=True):
     # get params should be part of url
@@ -99,6 +99,9 @@ def load(filename):
         return pickle.load(input)
 
 #############################
+def files(dir):
+    return [f for f in os.listdir(dir) if f[0] != '.']
+#############################
 def red(s):
     return '\033[91m' + s + '\033[0m'
 
@@ -131,4 +134,3 @@ def light(s):
 
 def flash(s):
     return '\033[5m' + s + '\033[0m'
-

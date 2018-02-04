@@ -1,38 +1,50 @@
 import spacy
+from pprint import pprint
 from ..utils import util
+import time
 
 '''
-from wrant.components.preprocessor import Preprocessor
 from wrant.components.suggester import Suggester
-suggester = Suggester(Preprocessor.load())
+suggester = Suggester()
 '''
 class Suggester:
     START = '<START>'
     END = '<END>'
 
-    def __init__(self, corpus, nlp=None):
+    def __init__(self, load=True, nlp=None):
+        start = time.time()
         if not nlp:
             nlp = spacy.load('en')
         self.nlp = nlp
-        self.corpus = corpus
-        self._create_context()
+        if load:
+            contexts = util.load('./data/contexts.pkl')
+            self.context = contexts[0]
+            self.rev_context = contexts[1]
+        print('loaded in ' + util.lapsed(start))
+
+    @staticmethod
+    def _clean(token):
+        return token.text.lower() if token.tag_ != 'NNP' else 'NNP'
 
     def _context(self, i, sent):
-        prev = sent[i-1].lower_ if i > 0 else self.START
-        token = sent[i].lower_
-        next = sent[i+1].lower_ if i < len(sent)-1 else self.END
+        prev = self._clean(sent[i-1]) if i > 0 else self.START
+        token = self._clean(sent[i])
+        next = self._clean(sent[i+1]) if i < len(sent)-1 else self.END
         return prev, token, next
 
     @staticmethod
     def _add(dict, key, val):
         if key not in dict:
-            dict[key] = set()
-        dict[key].add(val)
+            dict[key] = {}
+        if val not in dict[key]:
+            dict[key][val] = 0
+        dict[key][val] += 1
 
-    def _create_context(self):
+    def _create_context(self, sents):
         context = {}
         rev_context = {}
-        for sent in self.corpus.sents:
+
+        for sent in sents:
             for i in range(len(sent)):
                 prev, token, next = self._context(i, sent)
                 self._add(context, token, (prev, next))
@@ -40,13 +52,22 @@ class Suggester:
         self.context = context
         self.rev_context = rev_context
 
+    def _store(self):
+        contexts = (self.context, self.rev_context)
+        util.save(contexts, './data/contexts.pkl')
+
     def check_doc(self, text):
         pass
+
+    def _top(self, key, topn):
+        dict = self.rev_context[key]
+        ordered = util.sortdict(dict, rev=True)
+        return ordered[:topn] if len(ordered) >= topn else ordered
 
     def suggest(self, text):
         doc = self.nlp(text)
         sentence = ''
-        suggestions = {}
+        suggestions = []
         for sent in doc.sents:
             for i in range(len(sent)):
                 suggest = False
@@ -62,6 +83,6 @@ class Suggester:
                     sentence += util.green(t.string)
 
                 if suggest and (prev, next) in self.rev_context:
-                        suggestions[token] = self.rev_context[(prev, next)]
+                        suggestions.append((token, self._top((prev, next), 3)))
         print(sentence)
-        print(suggestions)
+        pprint(suggestions)
