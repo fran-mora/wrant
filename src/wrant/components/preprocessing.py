@@ -8,14 +8,14 @@ import time
 from ..utils import util
 from ..nlp.token import Token
 '''
-from wrant.components.preprocessor import Preprocessor
+from wrant.components.preprocessing import Preprocessor
 prep = Preprocessor()
 prep.preprocess()
 '''
 class Preprocessor:
 
     def __init__(self, dir='./data/'):
-        self.nlp = spacy.load('en', parse=True)
+        self.nlp = spacy.load('en', disable=['ner'])
         self.dir = dir
 
     def preprocess(self):
@@ -32,13 +32,17 @@ class Preprocessor:
         return sents
 
     def _create_corpus(self):
-        print('Creating corpus')
-        self.sents = []
+        print('Reading corpus')
         dir = self.dir + 'books/'
+        texts = []
         for filename in tqdm(util.files(dir)):
-            text = self.normalise(util.read(dir + filename))
-            doc = self.nlp(text)
-            self.sents += self._sentences(doc)
+            texts.append(self.normalise(util.read(dir + filename)))
+
+        print('Spacyfing corpus')
+        self.sents = []
+        for text in tqdm(texts):
+            self.sents += self._sentences(self.nlp(text))
+        print('Done')
 
     # def _nlp(self):
     #     print('Spacyfing corpus, this will take a long while...')
@@ -64,6 +68,7 @@ class Preprocessor:
 
     @staticmethod
     def normalise(text):
-        text = text.replace('”','"').replace('“','"').replace('’',"'").replace('—','-').replace('…','...').replace('`',"'").replace('‘',"'")
+        text = text.replace('”','"').replace('“','"').replace('’',"'").replace('`',"'")
+        text = text.replace('—','-').replace('…','...').replace('‘',"'")
         text = re.sub('\n+','\n', text)
         return text

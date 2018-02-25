@@ -3,7 +3,7 @@ import nltk
 import operator
 import pickle
 import time
-import utils.util as util
+import util
 from nltk_ext import *
 from gensim.models import word2vec
 
@@ -21,8 +21,9 @@ class Wrant:
 
   START = '<START>'
   END = '<END>'
+  DATA_DIR = '/Users/fm2g11/Dropbox/cs/nlp/wrant/data'
 
-  def __init__(self, fileName = '../../data/corpus/corpus_pos_lem.txt', isTokenized=True):
+  def __init__(self, fileName = f'{DATA_DIR}/corpus/corpus_pos_lem.txt', isTokenized=True):
     print('Loading resources...')
     self.lowcase_vocab = None
     start = time.time()
@@ -32,9 +33,9 @@ class Wrant:
     print('done in ' + str(time.time() - start) + ' s')
 
   @staticmethod
-  def load(filename = '../../data/wrant.pkl', inHome=False):
+  def load(filename = f'{DATA_DIR}/wrant.pkl', inHome=False):
     if inHome:
-      filename = '/Users/francesco.moramarco/.wrant/' + filename
+      filename = '/Users/francesco.moramarco/.wrant/wrant.pkl'
     print('Loading pickled object...')
     start = time.time()
     with open(filename, 'rb') as inputFile:
@@ -43,7 +44,7 @@ class Wrant:
       return wrant
 
   @staticmethod
-  def save(wrant, filename = '../../datma/wrant.pkl', minimal=False):
+  def save(wrant, filename = f'{DATA_DIR}/wrant.pkl', minimal=False):
     if minimal:
       wrant._2_context = None
       wrant._3_context = None
@@ -59,7 +60,7 @@ class Wrant:
 
   def w2v(self):
     if not hasattr(self, '_model') or self.model == None:
-      self.model = word2vec.Word2Vec.load('../../data/mdels/w2v.model')
+      self.model = word2vec.Word2Vec.load(f'{DATA_DIR}/models/w2v.model')
     return self.model
 
   def normalise(self, text):
