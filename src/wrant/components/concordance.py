@@ -24,7 +24,7 @@ class Concorder:
             if tok.text == '?':
                 return (
                     self._match(offset+i, tokens[i+1:]) or
-                    self._match(offset+i+1, tokens[i+1:]
+                    self._match(offset+i+1, tokens[i+1:])
                 )
             elif tok.lemma_ != self.text[offset+i].lemma_:
                 return False
