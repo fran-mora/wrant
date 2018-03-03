@@ -6,69 +6,52 @@ from tqdm import tqdm
 import os
 import time
 from ..utils import util
-from ..nlp.token import Token
-'''
-from wrant.components.preprocessing import Preprocessor
-prep = Preprocessor()
-prep.preprocess()
-'''
-class Preprocessor:
+from ..nlp import Token
+from ..constants import DATA_DIR
 
-    def __init__(self, dir='./data/'):
-        self.nlp = spacy.load('en', disable=['ner'])
-        self.dir = dir
 
-    def preprocess(self):
-        self._create_corpus()
-        self._w2v()
-        self._store()
+def _token_id(token, tokens_int):
+    tok = Token(token.text, token.tag_, token.lemma_)
+    if tok not in tokens_int:
+        tokens_int[tok] = len(tokens_int)
+    return tokens_int[tok]
 
-    @staticmethod
-    def _sentences(doc):
-        sents = []
-        for s in doc.sents:
-            sent = [Token(token) for token in s]
-            sents.append(sent)
-        return sents
+def _sentences(doc, tokens_int):
+    sents = []
+    for s in doc.sents:
+        sent = [_token_id(token, tokens_int) for token in s]
+        sents.append(sent)
+    return sents
 
-    def _create_corpus(self):
-        print('Reading corpus')
-        dir = self.dir + 'books/'
-        texts = []
-        for filename in tqdm(util.files(dir)):
-            texts.append(self.normalise(util.read(dir + filename)))
+def _normalise(text):
+    text = text.replace('”','"').replace('“','"').replace('’',"'").replace('`',"'")
+    text = text.replace('—','-').replace('…','...').replace('‘',"'")
+    text = re.sub('\n+','\n', text)
+    return text
 
-        print('Spacyfing corpus')
-        self.sents = []
-        for text in tqdm(texts):
-            self.sents += self._sentences(self.nlp(text))
-        print('Done')
+def process():
+    nlp = spacy.load('en', disable=['ner'])
+    print('Reading corpus')
+    dir = f'{DATA_DIR}/books/'
+    texts = []
+    for filename in tqdm(util.files(dir)[:]):
+        texts.append(_normalise(util.read(dir + filename)))
 
-    # def _nlp(self):
-    #     print('Spacyfing corpus, this will take a long while...')
-    #     start = time.time()
-    #     self.doc = self.nlp(self.corpus)
-    #     print(f'Done in {util.lapsed(start)}')
+    print('Spacyfing corpus')
+    sents = []
+    tokens_int = {}
 
-    def _w2v(self):
-        print('Creating word2vec model')
-        start = time.time()
-        # TODO
+    for text in tqdm(texts):
+        sents += _sentences(nlp(text), tokens_int)
+    print('Done')
 
-    def _store(self):
-        print('Storing results')
-        util.save(self.sents, self.dir + 'sents.pkl')
-        # TODO: w2v
-
-    def load(self):
-        start = time.time()
-        self.sents = util.load(self.dir + 'sents.pkl')
-        print(util.lapsed(start))
-        return self.sents
-
-    @staticmethod
-    def normalise(text):
-        text = text.replace('”','"').replace('“','"').replace('’',"'").replace('`',"'")
-        text = text.replace('—','-').replace('…','...').replace('‘',"'")
-        text = re.sub('\n+','\n', text)
-        return text
+    int_tokens = {}
+    for k,v in tokens_int.items():
+        int_tokens[v] = k
+    corpus = {
+        'sents': sents,
+        'tokens_int': tokens_int,
+        'int_tokens': int_tokens,
+    }
+    print('Storing results')
+    util.save(corpus, f'{DATA_DIR}/corpus.pkl')

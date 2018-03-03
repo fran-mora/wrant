@@ -106,7 +106,7 @@ class ConcordanceIndex():
             if i >= 0 and i < len(self._tokens) and word == self._tokens[i]:
                 return True
         return False
-    
+
     def __repr__(self):
         return '<ConcordanceIndex for %d tokens (%d types)>' % (
             len(self._tokens), len(self._offsets))
@@ -170,4 +170,3 @@ class ConcordanceIndex():
                 lines -= 1
         else:
             print("No matches")
-
