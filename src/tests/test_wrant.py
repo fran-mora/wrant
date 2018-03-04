@@ -7,4 +7,9 @@ def test_wrant_bootup():
 
     # components
     assert wrant.concorder != None
-    assert wrant.concorder.text != None
+    assert wrant.concorder.tokens != None
+    assert wrant.concorder.offsets != None
+
+    assert wrant.suggester != None
+    assert wrant.suggester.tokens != None
+    assert wrant.suggester.offsets != None

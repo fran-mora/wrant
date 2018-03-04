@@ -4,20 +4,17 @@ from ..utils import util
 
 class Concorder:
 
-    def __init__(self, sents):
-        self._build_index(sents)
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self._build_index()
 
-    def _build_index(self, sents):
-        self.text = []  # single list of tokens of the whole corpus
+    def _build_index(self):
         self.offsets = defaultdict(list)  # dictionary of token offsets in text
-
-        for sent in sents:
-            for tok in sent:
-                self.text.append(tok)
-                self.offsets[tok.lemma_].append(len(self.text) - 1)
+        for i, tok in enumerate(self.tokens):
+            self.offsets[tok.lemma_].append(len(self.tokens) - 1)
 
     def _match(self, offset, tokens):
-        if offset + len(tokens) > len(self.text):
+        if offset + len(tokens) > len(self.tokens):
             return False
 
         for i,tok in enumerate(tokens):
@@ -26,7 +23,7 @@ class Concorder:
                     self._match(offset+i, tokens[i+1:]) or
                     self._match(offset+i+1, tokens[i+1:])
                 )
-            elif tok.lemma_ != self.text[offset+i].lemma_:
+            elif tok.lemma_ != self.tokens[offset+i].lemma_:
                 return False
         return True
 
@@ -50,11 +47,11 @@ class Concorder:
             print(f'Displayed {lines} of {len(offsets)} matches.')
             for i in offsets[:lines]:
                 left = (' ' * half_width +
-                        ' '.join([tok.text for tok in self.text[i-cont:i]]))
-                right = ' '.join([tok.text for tok in self.text[i+size:i+cont]])
+                        ' '.join([tok.text for tok in self.tokens[i-cont:i]]))
+                right = ' '.join([tok.text for tok in self.tokens[i+size:i+cont]])
                 left = left[-half_width:]
                 right = right[:half_width]
-                mid = ' '.join([tok.text for tok in self.text[i:i+size]])
+                mid = ' '.join([tok.text for tok in self.tokens[i:i+size]])
                 result = f'{left} {util.bold(mid)} {right}'.replace('\n', '')
                 print(result)
         else:
