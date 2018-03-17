@@ -11,7 +11,7 @@ class Concorder:
     def _build_index(self):
         self.offsets = defaultdict(list)  # dictionary of token offsets in text
         for i, tok in enumerate(self.tokens):
-            self.offsets[tok.lemma_].append(len(self.tokens) - 1)
+            self.offsets[tok.lemma_].append(i)
 
     def _match(self, offset, tokens):
         if offset + len(tokens) > len(self.tokens):

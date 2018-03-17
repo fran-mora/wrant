@@ -14,10 +14,10 @@ class Wrant:
 
         print('Building components:')
         start = util.time.time()
-        # print('\t- concordance')
-        # self.concorder = Concorder(self.tokens)
-        print('\t- suggesting')
-        self.suggester = Suggester(self.tokens)
+        print('\t- concordance')
+        self.concorder = Concorder(self.tokens)
+        # print('\t- suggesting')
+        # self.suggester = Suggester(self.tokens)
         print(f'Done in {util.lapsed(start)}')
 
     def concordance(self, frag):
