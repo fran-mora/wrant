@@ -1,0 +1,23 @@
+div#text {
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  min-height: 500px;
+}
+div#archtext {
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  min-height: 200px;
+}
+.btn {
+  margin-top: 2px
+}
+
+#check {
+  width: 100%;
+}
+
+#archconvert {
+  width: 100%;
+}

@@ -17,7 +17,7 @@ class Concorder:
         if offset + len(tokens) > len(self.tokens):
             return False
 
-        for i,tok in enumerate(tokens):
+        for i, tok in enumerate(tokens):
             if tok.text == '?':
                 return (
                     self._match(offset+i, tokens[i+1:]) or
@@ -27,7 +27,6 @@ class Concorder:
                 return False
         return True
 
-
     def _get_offsets(self, frag_doc):
         word = frag_doc[0].lemma_
         return [
@@ -35,10 +34,19 @@ class Concorder:
             if self._match(offset, frag_doc)
         ]
 
+    def _concord(self, i, half_width, cont, size):
+        left = (' ' * half_width +
+                ' '.join([tok.text for tok in self.tokens[i-cont:i]]))
+        right = ' '.join([tok.text for tok in self.tokens[i+size:i+cont]])
+        left = left[-half_width:]
+        right = right[:half_width]
+        mid = ' '.join([tok.text for tok in self.tokens[i:i+size]])
+        result = f'{left} {util.bold(mid)} {right}'.replace('\n', '')
+        print(result)
 
     def concord(self, frag_doc, width=100, lines=25):
         half_width = (width - len(frag_doc.text) - 2) // 2
-        cont = width // 4 # approx number of words of context
+        cont = width // 4  # approx number of words of context
         size = len(frag_doc)
 
         offsets = self._get_offsets(frag_doc)
@@ -46,13 +54,6 @@ class Concorder:
             lines = min(lines, len(offsets))
             print(f'Displayed {lines} of {len(offsets)} matches.')
             for i in offsets[:lines]:
-                left = (' ' * half_width +
-                        ' '.join([tok.text for tok in self.tokens[i-cont:i]]))
-                right = ' '.join([tok.text for tok in self.tokens[i+size:i+cont]])
-                left = left[-half_width:]
-                right = right[:half_width]
-                mid = ' '.join([tok.text for tok in self.tokens[i:i+size]])
-                result = f'{left} {util.bold(mid)} {right}'.replace('\n', '')
-                print(result)
+                self._concord(i, half_width, cont, size)
         else:
             print("No matches")

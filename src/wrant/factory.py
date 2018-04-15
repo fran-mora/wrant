@@ -2,7 +2,6 @@ import spacy
 from .core import Wrant
 from .utils import util
 from .constants import DATA_DIR
-from .nlp import Token
 
 
 def create_wrant():

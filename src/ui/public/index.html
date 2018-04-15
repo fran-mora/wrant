@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="style.css" rel="stylesheet">
+    <link href="lib/bootstrap.min.css" rel="stylesheet">
+    <script src="lib/jquery-3.3.1.min.js"></script>
+    <script src="script.js"></script>
+    <title>Writing Assistant</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class='row'>
+        <div class='col-sm-8'>
+          <h1>Writing Assistant</h1>
+          <div id='text' contenteditable="true"></div>
+          <button id="check" class="btn btn-primary">Check</button>
+        </div>
+        <div class='col-sm-4'>
+          <h1>Archaic Coverter</h1>
+          <div id='archtext' contenteditable="true"></div>
+          <button id="archconvert" class="btn btn-primary">Convert</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var HOST = 'localhost';
+      var PORT = '8001';
+      $( document ).ready( function(){
+        $( '#check' ).click( function(){
+          var text = $('#text').text();
+          console.log(text);
+          $.post('http://' + HOST + ':' + PORT + '/check', {text: text}, function(data){
+            console.log(data);
+            $('#text').html(colourify(text, data));
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
