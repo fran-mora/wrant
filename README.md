@@ -4,10 +4,14 @@ Writing Assistant
 ## Clone
 ```bash
 git clone https://github.com/fm2g11/wrant.git
+cd wrant
 ```
 
 ## Prerequisites
-You need a `data/books` folders with plain text files, ideally books of the same genre to what you want to check.
+```bash
+mkdir data/books
+```
+You need to put some plain text files in `data/book`, ideally books of the same genre to what you want to check.
 
 ## Install
 
