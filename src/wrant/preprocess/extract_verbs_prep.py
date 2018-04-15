@@ -3,12 +3,12 @@ import gc
 from collections import defaultdict
 from tqdm import tqdm
 from ..utils import str_util, util
-from ..constants import DATA_DIR
+from ..constants import DATA_DIR, SPACY_MODEL_EN
 
 
 def process():
     gc.enable()
-    nlp = spacy.load('en', disable=['ner'])
+    nlp = spacy.load(SPACY_MODEL_EN, disable=['ner'])
     texts = str_util.get_corpus()
 
     verbs = defaultdict(dict)

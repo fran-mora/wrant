@@ -2,7 +2,7 @@ import spacy
 from tqdm import tqdm
 from ..utils import util, str_util
 from ..nlp import Token
-from ..constants import DATA_DIR
+from ..constants import DATA_DIR, SPACY_MODEL_EN
 
 
 def _token_id(token, tokens_int):
@@ -21,7 +21,7 @@ def _sentences(doc, tokens_int):
 
 
 def process():
-    nlp = spacy.load('en', disable=['ner'])
+    nlp = spacy.load(SPACY_MODEL_EN, disable=['ner'])
     texts = str_util.get_corpus()
 
     print('Spacyfing corpus')

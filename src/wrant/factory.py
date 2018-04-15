@@ -1,11 +1,11 @@
 import spacy
 from .core import Wrant
 from .utils import util
-from .constants import DATA_DIR
+from .constants import DATA_DIR, SPACY_MODEL_EN
 
 
 def create_wrant():
-    nlp = spacy.load('en', disable=['ner', 'parse'])
+    nlp = spacy.load(SPACY_MODEL_EN, disable=['ner', 'parse'])
     print('Loading corpus')
     start = util.time.time()
     corpus = util.load(f'{DATA_DIR}/corpus.pkl')
