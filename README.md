@@ -8,7 +8,7 @@ You need a `data/books` folders with plain text files, ideally books of the same
 
 ```bash
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz
-pip install git+https://github.com/fm2g11/wrant.git
+git clone https://github.com/fm2g11/wrant.git
 ```
 
 ## Preprocess Data
