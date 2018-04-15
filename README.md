@@ -12,3 +12,5 @@ pip install git+https://github.com/fm2g11/wrant.git
 ```python
 ./src/ui/server.py
 ```
+
+Now go to http://localhost:8001
