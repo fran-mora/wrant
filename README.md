@@ -16,7 +16,7 @@ You need to put some plain text files in `data/books`, ideally books of the same
 ## Install
 
 ```bash
-pip install -r requirements.txt
+pip install .
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz
 ```
 
