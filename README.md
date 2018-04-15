@@ -11,7 +11,7 @@ cd wrant
 ```bash
 mkdir data/books
 ```
-You need to put some plain text files in `data/book`, ideally books of the same genre to what you want to check.
+You need to put some plain text files in `data/books`, ideally books of the same genre to what you want to check.
 
 ## Install
 
