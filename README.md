@@ -1,13 +1,17 @@
 # wrant
 Writing Assistant
 
+## Clone
+```bash
+git clone https://github.com/fm2g11/wrant.git
+```
+
 ## Prerequisites
 You need a `data/books` folders with plain text files, ideally books of the same genre to what you want to check.
 
 ## Install
 
 ```bash
-git clone https://github.com/fm2g11/wrant.git
 pip install -r requirements.txt
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz
 ```
