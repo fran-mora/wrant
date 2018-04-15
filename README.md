@@ -9,7 +9,7 @@ cd wrant
 
 ## Prerequisites
 ```bash
-mkdir data/books
+mkdir -p data/books/
 ```
 You need to put some plain text files in `data/books`, ideally books of the same genre to what you want to check.
 
