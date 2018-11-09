@@ -19,8 +19,8 @@ class Wrant:
         self.concorder = Concorder(self.tokens)
         print('\t- suggesting')
         self.suggester = Suggester(self.tokens)
-        print('\t- verbs_prep')
-        self.verbs_prep = VerbPrep()
+        #print('\t- verbs_prep')
+        #self.verbs_prep = VerbPrep()
         print(f'Done in {util.lapsed(start)}')
 
     def concordance(self, frag):
