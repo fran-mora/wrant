@@ -1,7 +1,7 @@
 from collections import defaultdict
 from util import *
-from nltk.stem import WordNetLemmatizer
-import nltk
+# import nltk
+
 
 class ConcordanceIndex():
     TOKEN = '§'
@@ -9,7 +9,7 @@ class ConcordanceIndex():
     An index that can be used to look up the offset locations at which
     a given word occurs in a document.
     """
-    def __init__(self, tokens, tokens_lemma):
+    def __init__(self, tokens, tokens_lemma, nlp):
         """
         Construct a new concordance index.
 
@@ -21,7 +21,7 @@ class ConcordanceIndex():
             you use ``key=lambda s:s.lower()``, then the index will be
             case-insensitive.
         """
-        self.lemmatizer = WordNetLemmatizer()
+        self.nlp = nlp
         self._tokens = tokens
         self._tokens_lemma = tokens_lemma
         """The document (list of tokens) that this concordance index
@@ -86,6 +86,7 @@ class ConcordanceIndex():
                 if not self._context_match(offset, word, context_size):
                     return False
         return True
+
     def full_match(self, offset, words, context, context_size):
         for word in words:
             if offset >= len(self._tokens) or not self._match(self._tokens[offset].lower(), word.lower()):
@@ -126,8 +127,8 @@ class ConcordanceIndex():
         return 'v' if pos[:2] == 'VB' else 'n'
 
     def lemmatize(self, words):
-        words_pos = nltk.pos_tag(words)
-        return [self.lemmatizer.lemmatize(w[0], pos=self.reducePOS(w[1])) for w in words_pos]
+        doc = self.nlp(words)
+        return [tok.lemma_ for tok in doc]
 
     def print_concordance(self, words, context=None, lemma=True, context_size=5, width=75, lines=25):
         """
@@ -141,20 +142,16 @@ class ConcordanceIndex():
         :type lines: int
         """
         # normalise context
-        if context != None:
-            new_context = []
-            for word in context:
-                new_context.append(word.lower().strip())
-            context = self.lemmatize(new_context)
+        if context is not None:
+            context = [self.lemmatize(word) for word in context]
 
         half_width = (width - len(words) - 2) // 2
-        cont = width // 4 # approx number of words of context
-        words = self.lemmatize(nltk.word_tokenize(words))
+        cont = width // 4  # approx number of words of context
+        words = self.lemmatize(words)
 
         size = len(words)
         offsets = self.offsets_lemma(words, context, context_size)
         if offsets:
-            full_matches = 0
             lines = min(lines, len(offsets))
             print("Displayed %s of %s matches." % (lines, len(offsets)))
             for i in offsets:

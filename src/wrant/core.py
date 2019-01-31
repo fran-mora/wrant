@@ -1,3 +1,6 @@
+from old.nltk_ext import ConcordanceIndex
+from tqdm import tqdm
+
 from .components.concordance import Concorder
 from .components.suggesting import Suggester
 from .components.verbs_prep import VerbPrep
@@ -9,22 +12,21 @@ class Wrant:
     def __init__(self, nlp, sents):
         self.nlp = nlp
         self.tokens = []  # single list of tokens of the whole corpus
-        for sent in sents:
+        self.lemmas = []
+        for sent in tqdm(sents):
             for tok in sent:
-                self.tokens.append(tok)
+                if '\n' not in tok.text:
+                    self.tokens.append(tok.text)
+                    self.lemmas.append(tok.lemma_)
 
-        print('Building components:')
-        start = util.time.time()
-        print('\t- concordance')
-        self.concorder = Concorder(self.tokens)
-        print('\t- suggesting')
-        self.suggester = Suggester(self.tokens)
+        self._concorder = ConcordanceIndex(self.tokens, self.lemmas, self.nlp)
+        # print('\t- suggesting')
+        # self.suggester = Suggester(self.tokens)
         #print('\t- verbs_prep')
         #self.verbs_prep = VerbPrep()
-        print(f'Done in {util.lapsed(start)}')
 
-    def concordance(self, frag):
-        self.concorder.concord(self.nlp(frag))
+    def concordance(self, words, context=None, context_size=5, width=75, lines=25):
+        self._concorder.print_concordance(words, context=context, context_size=context_size, width=width, lines=lines)
 
     def check(self, frag):
         # self.suggester.check(self.nlp(frag))
