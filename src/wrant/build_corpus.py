@@ -34,7 +34,7 @@ def build():
     tokens = []
     lemmas = []
     print('Tokenizing and lemmatizing...')
-    for line in tqdm(text.split('\n')[:1000]):
+    for line in tqdm(text.split('\n')):
         line = line.strip()
         if line:
             doc = nlp(line)
