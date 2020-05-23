@@ -1,1 +1,1 @@
-from .factory import create_wrant  # noqa
+from .wrant import Wrant

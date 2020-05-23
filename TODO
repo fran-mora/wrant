@@ -1,5 +1,0 @@
-
-- Suggest:
-For each word, look at the surrounding ones and, if the trigram doesn't exist, look up the alternatives and return the top ones `burst in tears` -> `burst into tears`
-If the words around don't exist (or for all NNP), try looking at the pos tag: `look to Delwin` -> `look at Delwin`
-Increase the window size, where possible: `fleeting look to Delwin` -> `fleeting look at Delwin`
