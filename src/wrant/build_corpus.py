@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from collections import defaultdict
+
 from .util import files, read, save
 import spacy
 from tqdm import tqdm
@@ -42,10 +44,26 @@ def build():
                 tokens.append(tok.text)
                 lemmas.append(tok.lemma_)
 
+    print('Done.')
+    print('Building offsets...')
+    token_offsets = defaultdict(list)
+    for index, word in tqdm(enumerate(tokens)):
+        word = word.lower()
+        token_offsets[word].append(index)
+    token_offsets = {word: tuple(indices) for word, indices in token_offsets.items()}
+
+    lemma_offsets = defaultdict(list)
+    for index, word in tqdm(enumerate(lemmas)):
+        word = word.lower()
+        lemma_offsets[word].append(index)
+    lemma_offsets = {word: tuple(indices) for word, indices in lemma_offsets.items()}
+
     print('Saving...')
     save({
         'tokens': tokens,
-        'lemmas': lemmas
+        'lemmas': lemmas,
+        'token_offsets': token_offsets,
+        'lemma_offsets': lemma_offsets
     }, CORPUS)
     print('Done.')
 

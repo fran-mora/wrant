@@ -10,7 +10,8 @@ class Wrant:
         print('Loading resources...')
         corpus = load(CORPUS)
         nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
-        self.concorder = ConcordanceIndex(corpus['tokens'], corpus['lemmas'], nlp)
+        print('Done.')
+        self.concorder = ConcordanceIndex(corpus, nlp)
 
     def concordance(self, text, width=75, lines=25, lemma=True, context=None, context_size=5):
         self.concorder.print_concordance(

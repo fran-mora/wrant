@@ -9,7 +9,7 @@ class ConcordanceIndex:
     An index that can be used to look up the offset locations at which
     a given word occurs in a document.
     """
-    def __init__(self, tokens, lemmas, nlp):
+    def __init__(self, corpus, nlp):
         """
         Construct a new concordance index.
 
@@ -18,20 +18,12 @@ class ConcordanceIndex:
             to access the context of a given word occurrence.
         """
         self.nlp = nlp
-        self._tokens = tokens
-        self._lemmas = lemmas
+        self._tokens = corpus['tokens']
+        self._lemmas = corpus['lemmas']
+        self._token_offsets = corpus['token_offsets']
+        self._lemma_offsets = corpus['lemma_offsets']
         """The document (list of tokens) that this concordance index
            was created from."""
-
-        self._offsets = defaultdict(list)
-        for index, word in enumerate(tokens):
-            word = word.lower()
-            self._offsets[word].append(index)
-
-        self._offsets_lemma = defaultdict(list)
-        for index, word in enumerate(self._lemmas):
-            word = word.lower()
-            self._offsets_lemma[word].append(index)
 
     def offsets(self, words, context, context_size, lemma=False):
         """
@@ -40,10 +32,10 @@ class ConcordanceIndex:
             word occurs.
         """
         word = words[0].lower()
-        offsets = self._offsets_lemma if lemma else self._offsets
+        offsets = self._lemma_offsets if lemma else self._token_offsets
 
         return [
-            offset for offset in offsets[word]
+            offset for offset in offsets.get(word, [])
             if self.full_match(offset, words, context, context_size, lemma=lemma)
         ]
 
