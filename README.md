@@ -43,6 +43,6 @@ Wrant.concordance(
 
 - **text**: The piece of text to search for. Typically a word or an expression.
 - **width**: The number of characters to show for each results.
-- **lemma**: Wether to match on lemmas or original tokens. Applies to context too.
+- **lemma**: Whether to match on lemmas or original tokens. Applies to context too.
 - **context**: A list of words that needs to occur near the *text*.
 - **context_size**: Number of words (both left and right) from the *text* in which *context* applies to.
