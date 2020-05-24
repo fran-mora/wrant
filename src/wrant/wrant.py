@@ -14,7 +14,7 @@ class Wrant:
         print('Done in ' + lapsed(start_time))
         self.concorder = ConcordanceIndex(corpus, nlp)
 
-    def concordance(self, text, width=100, lines=25, lemma=True, context=None, context_size=5):
+    def concordance(self, text, width=90, lines=25, lemma=True, context=None, context_size=5):
         self.concorder.print_concordance(
             text,
             width=width,
