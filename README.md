@@ -29,7 +29,7 @@ wrant.concordance('scratched', context=['back'])  # This means 'back' has to be 
 ```python
 Wrant.concordance(
     text,
-    width=75,
+    width=100,
     lines=25,
     lemma=True,
     context=[],
