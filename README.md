@@ -22,6 +22,7 @@ from wrant import Wrant
 wrant = Wrant()
 wrant.concordance('stirrup')
 wrant.concordance('scratched * back')  # * is a wild character for a single token
+wrant.concordance('scratched', context=['back'])  # This means 'back' has to be somewhere around 'scratched'
 ```
 
 ### Arguments
