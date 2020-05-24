@@ -3,6 +3,8 @@ Writing Assistant
 
 A simple tool to find collocations of words in a given corpus. Useful for finding correct word usages and checking up phrases.
 
+Requires python 3.X
+
 ## Clone
 ```bash
 git clone https://github.com/fm2g11/wrant.git
