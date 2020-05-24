@@ -21,6 +21,7 @@ make build    # will build a corpus based on the books you put in data/books
 from wrant import Wrant
 wrant = Wrant()
 wrant.concordance('stirrup')
+wrant.concordance('scratched * back')  # * is a wild character for a single token
 ```
 
 ### Arguments
