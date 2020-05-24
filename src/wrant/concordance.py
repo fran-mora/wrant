@@ -1,10 +1,8 @@
-from collections import defaultdict
-
+from wrant.constants import ANY_TOKEN
 from wrant.util import blue, bold
 
 
 class ConcordanceIndex:
-    ANY_TOKEN = '*'
     """
     An index that can be used to look up the offset locations at which
     a given word occurs in a document.
@@ -39,26 +37,26 @@ class ConcordanceIndex:
             if self.full_match(offset, words, context, context_size, lemma=lemma)
         ]
 
-    def _match(self, word_corpus, word_text):
-        if word_text == ConcordanceIndex.ANY_TOKEN:
+    @staticmethod
+    def match(word_corpus, word_text):
+        if word_text == ANY_TOKEN:
             return True
         return word_corpus == word_text
 
     def full_match(self, offset, words, context, context_size, lemma=False):
         corpus = self._lemmas if lemma else self._tokens
-        for word in words:
-            if offset >= len(corpus) or not self._match(corpus[offset].lower(), word.lower()):
+        for i, word in enumerate(words):
+            if offset+i >= len(corpus) or not self.match(corpus[offset+i].lower(), word.lower()):
                 return False
-            offset += 1
 
         # check context
         if context:
             for word in context:
-                if not self._context_match(offset, word, context_size, lemma):
+                if not self.context_match(offset, word, context_size, lemma):
                     return False
         return True
 
-    def _context_match(self, offset, word, context_size, lemma=False):
+    def context_match(self, offset, word, context_size, lemma=False):
         corpus = self._lemmas if lemma else self._tokens
 
         for i in range(offset - context_size, offset + context_size + 1):
